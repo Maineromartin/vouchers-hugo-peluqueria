@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hugo Peluquería · Generador de Vouchers</title>
+  <meta name="description" content="Generá vouchers de regalo elegantes para Hugo Peluquería. Descargá en alta calidad para compartir por WhatsApp." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* ══════════════════════════════════
+       RESET & TOKENS
+    ══════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Palette */
+      --cream:       #FAF8F5;
+      --white:       #FFFFFF;
+      --border:      #E6E1D8;
+      --border-lt:   #EFECe8;
+      --sage:        #6B8E8E;
+      --sage-lt:     #A8C4C4;
+      --sage-dk:     #4A6B6B;
+      --nude:        #A68A7B;
+      --nude-lt:     #C4A898;
+      --text:        #2C2C2C;
+      --text-mid:    #666056;
+      --text-soft:   #9A9188;
+
+      /* Accent (sage as primary) */
+      --accent:      #6B8E8E;
+      --accent-lt:   #EAF2F2;
+      --accent-hover: #4A6B6B;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 4px rgba(44,44,44,.06);
+      --shadow-md: 0 4px 20px rgba(44,44,44,.08), 0 1px 4px rgba(44,44,44,.04);
+      --shadow-lg: 0 8px 40px rgba(44,44,44,.1), 0 2px 8px rgba(44,44,44,.05);
+
+      /* Radius */
+      --r-sm: 8px;
+      --r-md: 14px;
+      --r-lg: 20px;
+
+      /* Voucher card dimensions (horizontal) */
+      --vc-w: 480px;
+      --vc-h: 310px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 35% at 15% 5%, rgba(107,142,142,.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 90% 90%, rgba(166,138,123,.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ══════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════ */
+    .app {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100dvh;
+    }
+
+    /* ══════════════════════════════════
+       HEADER
+    ══════════════════════════════════ */
+    .app-header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 36px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-monogram {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--white);
+    }
+
+    .header-monogram svg { display: block; }
+
+    .header-info { display: flex; flex-direction: column; gap: 2px; }
+
+    .header-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .header-label {
+      font-size: .6rem;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .header-pill {
+      margin-left: auto;
+      background: var(--accent-lt);
+      color: var(--sage-dk);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════
+       FORM PANEL
+    ══════════════════════════════════ */
+    .panel-form {
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      overflow-y: auto;
+    }
+
+    .section-label {
+      font-size: .58rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .fields { display: flex; flex-direction: column; gap: 20px; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+
+    .field label {
+      font-size: .6rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .88rem;
+      font-weight: 400;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      -webkit-appearance: none;
+    }
+
+    .field input:focus {
+      border-color: var(--sage);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(107,142,142,.12);
+    }
+
+    .field input::placeholder { color: #BFBAB2; }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: .5;
+      filter: none;
+    }
+
+    .code-input {
+      font-weight: 700 !important;
+      font-size: 1rem !important;
+      letter-spacing: .3em !important;
+      text-align: center;
+      color: var(--sage-dk) !important;
+      background: var(--accent-lt) !important;
+      border-color: var(--sage-lt) !important;
+    }
+
+    .code-input:focus {
+      border-color: var(--sage) !important;
+      box-shadow: 0 0 0 3px rgba(107,142,142,.15) !important;
+    }
+
+    .btn-regen {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text-mid);
+      font-size: .72rem;
+      font-weight: 500;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 11px 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-regen:hover {
+      border-color: var(--sage);
+      color: var(--sage-dk);
+      background: var(--accent-lt);
+    }
+
+    /* Hint text */
+    .field-hint {
+      font-size: .62rem;
+      color: var(--text-soft);
+      margin-top: -2px;
+    }
+
+    /* Download button */
+    .btn-download {
+      position: relative;
+      overflow: hidden;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--r-md);
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 16px 24px;
+      cursor: pointer;
+      width: 100%;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(107,142,142,.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .btn-download::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform .4s ease;
+    }
+
+    .btn-download:hover::before { transform: translateX(100%); }
+    .btn-download:hover { background: var(--sage-dk); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(107,142,142,.4); }
+    .btn-download:active { transform: translateY(0); }
+    .btn-download.loading { pointer-events: none; opacity: .75; }
+
+    /* ══════════════════════════════════
+       PREVIEW PANEL
+    ══════════════════════════════════ */
+    .panel-preview {
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      background: var(--cream);
+    }
+
+    .preview-label {
+      font-size: .58rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .preview-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .voucher-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* ══════════════════════════════════
+       VOUCHER CARD
+    ══════════════════════════════════ */
+    #voucher-card {
+      width: var(--vc-w);
+      height: var(--vc-h);
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(230,225,216,.8);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Inner frame inset */
+    #voucher-card::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(107,142,142,.18);
+      border-radius: 10px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Soft pastel top stripe */
+    .vc-stripe {
+      height: 5px;
+      background: linear-gradient(90deg, #A8C4C4 0%, #C4A898 50%, #A8C4C4 100%);
+      flex-shrink: 0;
+    }
+
+    .vc-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 28px 16px;
+      gap: 0;
+    }
+
+    /* Header area */
+    .vc-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-shrink: 0;
+      margin-bottom: 10px;
+    }
+
+    .vc-title-block {}
+
+    .vc-brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.08rem;
+      font-weight: 500;
+      letter-spacing: .22em;
+      color: #2C2C2C;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .vc-voucher-label {
+      font-size: .46rem;
+      font-weight: 500;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: #9A9188;
+      margin-top: 4px;
+    }
+
+    .vc-code-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+    }
+
+    .vc-code-label {
+      font-size: .4rem;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: #BFBAB2;
+    }
+
+    .vc-code-val {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .22em;
+      color: #9A9188;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Divider */
+    .vc-hr {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #E6E1D8 20%, #E6E1D8 80%, transparent);
+      flex-shrink: 0;
+      margin: 2px 0 10px;
+    }
+
+    /* Vale por — the hero line */
+    .vc-vale-label {
+      font-size: .46rem;
+      font-weight: 600;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--sage-dk);
+      margin-bottom: 3px;
+      flex-shrink: 0;
+    }
+
+    .vc-service {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      font-style: italic;
+      color: #2C2C2C;
+      line-height: 1.2;
+      min-height: 1.75rem;
+      flex-shrink: 0;
+      word-break: break-word;
+    }
+
+    /* Recipients grid */
+    .vc-fields {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+      align-content: end;
+      margin-top: 8px;
+    }
+
+    .vc-field { display: flex; flex-direction: column; gap: 2px; }
+
+    .vc-field-label {
+      font-size: .4rem;
+      font-weight: 600;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: #BFBAB2;
+    }
+
+    .vc-field-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .88rem;
+      font-weight: 400;
+      color: #2C2C2C;
+      letter-spacing: .03em;
+      word-break: break-word;
+      border-bottom: 1px solid #E6E1D8;
+      padding-bottom: 2px;
+      min-height: 1.1rem;
+    }
+
+    /* Footer */
+    .vc-footer {
+      border-top: 1px solid #E6E1D8;
+      margin-top: 10px;
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .vc-footer-icon {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+      opacity: .65;
+    }
+
+    .vc-footer-text {
+      font-size: .5rem;
+      font-weight: 400;
+      letter-spacing: .05em;
+      color: #9A9188;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .vc-footer-text strong {
+      font-weight: 600;
+      color: #666056;
+    }
+
+    /* Bottom stripe */
+    .vc-stripe-bottom {
+      height: 3px;
+      background: linear-gradient(90deg, #A8C4C4 0%, #C4A898 50%, #A8C4C4 100%);
+      flex-shrink: 0;
+      opacity: .6;
+    }
+
+    /* ══════════════════════════════════
+       TOAST
+    ══════════════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 11px 22px;
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      color: var(--sage-dk);
+      box-shadow: var(--shadow-md);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
+      z-index: 9999;
+      white-space: nowrap;
+      opacity: 0;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ══════════════════════════════════
+       MODAL FALLBACK
+    ══════════════════════════════════ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(44,44,44,.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      box-shadow: 0 20px 60px rgba(44,44,44,.18);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+      transform: translateY(16px) scale(.98);
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    .modal-backdrop.open .modal-box {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 20px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      color: var(--text);
+    }
+
+    .modal-close {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+      font-size: 1rem;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      border-color: var(--sage);
+      color: var(--sage-dk);
+      background: var(--accent-lt);
+    }
+
+    .modal-img-wrap {
+      padding: 18px 20px 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .modal-img-wrap img {
+      max-width: 100%;
+      max-height: 55vh;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: block;
+      /* Tell Safari this is interactive so long-press menu appears */
+      -webkit-user-select: auto;
+      user-select: auto;
+      touch-action: manipulation;
+    }
+
+    .modal-hint {
+      padding: 12px 22px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .modal-hint-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .modal-hint-text {
+      font-size: .78rem;
+      font-weight: 400;
+      color: var(--text-mid);
+      line-height: 1.55;
+    }
+
+    .modal-hint-text strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .modal-actions {
+      padding: 0 20px 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-btn-share {
+      flex: 1;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--r-sm);
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 13px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background .2s;
+    }
+
+    .modal-btn-share:hover { background: var(--sage-dk); }
+
+    .modal-btn-close {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text-mid);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 500;
+      padding: 13px 18px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .modal-btn-close:hover {
+      border-color: var(--sage);
+      color: var(--sage-dk);
+    }
+
+    /* ══════════════════════════════════
+       RESPONSIVE — MOBILE
+    ══════════════════════════════════ */
+    @media (max-width: 820px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+      }
+
+      .app-header { padding: 16px 20px; }
+      .header-pill { display: none; }
+
+      .panel-form {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 28px 20px;
+        gap: 24px;
+      }
+
+      .panel-preview {
+        padding: 28px 20px;
+        justify-content: flex-start;
+      }
+
+      :root {
+        --vc-w: min(90vw, 420px);
+        --vc-h: calc(var(--vc-w) * 0.645);
+      }
+    }
+
+    @media (max-width: 480px) {
+      :root {
+        --vc-w: calc(100vw - 40px);
+        --vc-h: calc(var(--vc-w) * 0.645);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ HEADER ══ -->
+  <header class="app-header">
+    <div class="header-monogram">
+      <!-- Minimal H monogram -->
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 4 L5 16 M5 10 L15 10 M15 4 L15 16" stroke="#6B8E8E" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="header-info">
+      <span class="header-brand">Hugo Peluquería</span>
+      <span class="header-label">Generador de Vouchers</span>
+    </div>
+    <div class="header-pill">Gift Card</div>
+  </header>
+
+  <!-- ══ FORM PANEL ══ -->
+  <section class="panel-form">
+    <div class="section-label">Datos del voucher</div>
+
+    <div class="fields">
+
+      <div class="field">
+        <label for="f-servicio">Vale por</label>
+        <input id="f-servicio" type="text" placeholder="Ej: Corte + barba · $5.000" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="f-para">Para</label>
+        <input id="f-para" type="text" placeholder="Nombre de quien recibe" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="f-de">De</label>
+        <input id="f-de" type="text" placeholder="Tu nombre" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="f-valido">Válido hasta el día</label>
+        <input id="f-valido" type="date" />
+        <span class="field-hint">Por defecto: 30 días desde hoy</span>
+      </div>
+
+      <div class="field">
+        <label for="f-codigo">Código de voucher</label>
+        <div class="field-row">
+          <input id="f-codigo" class="code-input" type="text"
+                 maxlength="6" placeholder="A1B2" autocomplete="off" />
+          <button class="btn-regen" id="btn-regen" title="Generar código nuevo">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M23 4v6h-6M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+            Nuevo
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-download" id="btn-download">
+      <!-- WhatsApp icon -->
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986c-.047.187.009.385.148.52a.564.564 0 0 0 .392.158c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/>
+      </svg>
+      Descargar imagen para WhatsApp
+    </button>
+  </section>
+
+  <!-- ══ PREVIEW PANEL ══ -->
+  <section class="panel-preview">
+    <div class="preview-label">Vista previa en tiempo real</div>
+
+    <div class="voucher-wrapper">
+
+      <!-- ════ VOUCHER CARD (captured by html2canvas) ════ -->
+      <div id="voucher-card">
+        <div class="vc-stripe"></div>
+
+        <div class="vc-body">
+
+          <!-- Head: brand + code -->
+          <div class="vc-head">
+            <div class="vc-title-block">
+              <div class="vc-brand-name">Hugo Peluquería</div>
+              <div class="vc-voucher-label">Voucher de Regalo</div>
+            </div>
+            <div class="vc-code-badge">
+              <span class="vc-code-label">Código</span>
+              <span class="vc-code-val" id="vc-codigo">—</span>
+            </div>
+          </div>
+
+          <div class="vc-hr"></div>
+
+          <!-- Vale por -->
+          <div class="vc-vale-label">Vale por</div>
+          <div class="vc-service" id="vc-servicio">—</div>
+
+          <!-- Fields grid -->
+          <div class="vc-fields">
+            <div class="vc-field">
+              <span class="vc-field-label">Para</span>
+              <span class="vc-field-val" id="vc-para">—</span>
+            </div>
+            <div class="vc-field">
+              <span class="vc-field-label">De</span>
+              <span class="vc-field-val" id="vc-de">—</span>
+            </div>
+            <div class="vc-field" style="grid-column: 1 / -1;">
+              <span class="vc-field-label">Válido hasta el día</span>
+              <span class="vc-field-val" id="vc-valido">—</span>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="vc-footer">
+            <!-- Phone/WhatsApp icon -->
+            <svg class="vc-footer-icon" viewBox="0 0 24 24" fill="#6B8E8E" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986a.564.564 0 0 0 .54.676c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/>
+            </svg>
+            <div class="vc-footer-text">
+              Coordinar turno al <strong>3533-430057</strong> (Alejandra)
+            </div>
+          </div>
+
+        </div>
+
+        <div class="vc-stripe-bottom"></div>
+      </div>
+      <!-- ════ END VOUCHER CARD ════ -->
+
+    </div>
+  </section>
+
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- ══ MODAL FALLBACK ══ -->
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-label="Imagen del voucher generada">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Voucher generado</span>
+      <button class="modal-close" id="modal-close-x" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-img-wrap">
+      <img id="modal-img" src="" alt="Voucher Hugo Peluquería" />
+    </div>
+    <div class="modal-hint">
+      <span class="modal-hint-icon">👇</span>
+      <p class="modal-hint-text">
+        <strong>Mantené presionada la imagen</strong> para guardarla en tu galería o enviarla directo por WhatsApp.
+      </p>
+    </div>
+    <div class="modal-actions" id="modal-actions">
+      <!-- El botón "Compartir" se agrega dinámicamente si Web Share está disponible -->
+      <button class="modal-btn-close" id="modal-close-btn">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
+<script>
+  /* ── Helpers ── */
+  function randomCode(len) {
+    len = len || 4;
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var result = '';
+    for (var i = 0; i < len; i++) {
+      result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
+  }
+
+  function defaultDate() {
+    var d = new Date();
+    d.setDate(d.getDate() + 30);
+    return d.toISOString().split('T')[0];
+  }
+
+  function formatDate(val) {
+    if (!val) return '—';
+    var parts = val.split('-');
+    var y = parts[0];
+    var m = parseInt(parts[1]);
+    var day = parseInt(parts[2]);
+    var months = ['enero','febrero','marzo','abril','mayo','junio',
+                  'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    return day + ' de ' + months[m - 1] + ' de ' + y;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, 3000);
+  }
+
+  /* ── Init elements ── */
+  var fPara    = document.getElementById('f-para');
+  var fDe      = document.getElementById('f-de');
+  var fSrv     = document.getElementById('f-servicio');
+  var fValido  = document.getElementById('f-valido');
+  var fCodigo  = document.getElementById('f-codigo');
+  var btnRegen = document.getElementById('btn-regen');
+  var btnDl    = document.getElementById('btn-download');
+
+  // Set defaults
+  fValido.value = defaultDate();
+  fCodigo.value = randomCode();
+
+  /* ── Sync card in real time ── */
+  function syncCard() {
+    document.getElementById('vc-para').textContent     = fPara.value.trim()  || '—';
+    document.getElementById('vc-de').textContent       = fDe.value.trim()    || '—';
+    document.getElementById('vc-servicio').textContent = fSrv.value.trim()   || '—';
+    document.getElementById('vc-valido').textContent   = formatDate(fValido.value);
+    var code = fCodigo.value.trim().toUpperCase();
+    document.getElementById('vc-codigo').textContent   = code ? '#' + code : '—';
+  }
+
+  /* ── Force uppercase on code ── */
+  fCodigo.addEventListener('input', function () {
+    var pos = fCodigo.selectionStart;
+    fCodigo.value = fCodigo.value.toUpperCase();
+    try { fCodigo.setSelectionRange(pos, pos); } catch (e) {}
+    syncCard();
+  });
+
+  [fPara, fDe, fSrv, fValido].forEach(function (el) {
+    el.addEventListener('input', syncCard);
+  });
+
+  /* ── Regenerate code ── */
+  btnRegen.addEventListener('click', function () {
+    fCodigo.value = randomCode();
+    syncCard();
+    var svg = btnRegen.querySelector('svg');
+    svg.style.transition = 'transform .4s ease';
+    svg.style.transform = 'rotate(360deg)';
+    setTimeout(function () { svg.style.transform = ''; svg.style.transition = ''; }, 420);
+  });
+
+  // Initial sync
+  syncCard();
+
+  /* ══════════════════════════════════
+     MODAL helpers
+  ══════════════════════════════════ */
+  var modal        = document.getElementById('modal');
+  var modalImg     = document.getElementById('modal-img');
+  var modalActions = document.getElementById('modal-actions');
+
+  function openModal(dataUrl, blob) {
+    modalImg.src = dataUrl;
+
+    // Remove any previous share button
+    var old = document.getElementById('modal-share-btn');
+    if (old) old.parentNode.removeChild(old);
+
+    // Insert Web Share button if supported and we have a blob
+    if (blob && navigator.canShare && navigator.canShare({ files: [new File([blob], 'voucher.png', { type: 'image/png' })] })) {
+      var shareBtn = document.createElement('button');
+      shareBtn.className = 'modal-btn-share';
+      shareBtn.id = 'modal-share-btn';
+      shareBtn.innerHTML =
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986a.564.564 0 0 0 .54.676c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/></svg>' +
+        ' Enviar por WhatsApp';
+      shareBtn.addEventListener('click', function () {
+        var file = new File([blob], 'hugo-peluqueria-voucher.png', { type: 'image/png' });
+        navigator.share({
+          files: [file],
+          title: 'Voucher Hugo Peluquería'
+        }).catch(function (e) {
+          // User cancelled share or error — no problem
+          console.log('Share cancelled or failed:', e);
+        });
+      });
+      // Insert before close button
+      var closeBtn = document.getElementById('modal-close-btn');
+      modalActions.insertBefore(shareBtn, closeBtn);
+    }
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    // Free memory
+    setTimeout(function () { modalImg.src = ''; }, 400);
+  }
+
+  document.getElementById('modal-close-x').addEventListener('click', closeModal);
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) closeModal();
+  });
+
+  /* ══════════════════════════════════
+     BUTTON LABEL HELPERS
+  ══════════════════════════════════ */
+  var BTN_IDLE_HTML =
+    '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">' +
+    '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>' +
+    '<path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986a.564.564 0 0 0 .54.676c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/>' +
+    '</svg> Descargar imagen para WhatsApp';
+
+  var BTN_LOADING_HTML =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">' +
+    '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' +
+    '</svg> Generando imagen…';
+
+  function restoreBtn() {
+    btnDl.classList.remove('loading');
+    btnDl.innerHTML = BTN_IDLE_HTML;
+  }
+
+  /* ══════════════════════════════════
+     EXPORT — mobile-safe
+  ══════════════════════════════════ */
+  btnDl.addEventListener('click', function () {
+    btnDl.classList.add('loading');
+    btnDl.innerHTML = BTN_LOADING_HTML;
+
+    var card = document.getElementById('voucher-card');
+
+    // Build a filename slug
+    function slug() {
+      var para = fPara.value.trim() || 'voucher';
+      var code = fCodigo.value.trim() || 'hugo';
+      return 'hugo-peluqueria-' +
+        para.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-') +
+        '-' + code + '.png';
+    }
+
+    // Wrap fonts.ready with a 2-second timeout so we never hang
+    var fontsPromise = new Promise(function (resolve) {
+      var timer = setTimeout(resolve, 2000); // give up waiting after 2 s
+      document.fonts.ready.then(function () {
+        clearTimeout(timer);
+        resolve();
+      }).catch(function () {
+        clearTimeout(timer);
+        resolve(); // font errors must not block rendering
+      });
+    });
+
+    fontsPromise.then(function () {
+      return html2canvas(card, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,   // allow cross-origin content to paint even if tainted
+        backgroundColor: '#FFFFFF',
+        logging: false,
+        imageTimeout: 4000, // 4 s max per image; 0 hangs on some mobile browsers
+        removeContainer: true
+      });
+    }).then(function (canvas) {
+
+      var dataUrl = canvas.toDataURL('image/png', 1.0);
+
+      // ── Attempt 1: convert to Blob and use Web Share API (iOS 15+ / Android) ──
+      function tryShare(blob) {
+        try {
+          var file = new File([blob], slug(), { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: 'Voucher Hugo Peluquería'
+            }).then(function () {
+              showToast('✓ Compartido desde el menú del celular');
+            }).catch(function (e) {
+              // User cancelled — just show modal so they can long-press
+              console.log('Share cancelled:', e);
+              openModal(dataUrl, blob);
+            });
+            return true;
+          }
+        } catch (e) {
+          console.log('canShare check failed:', e);
+        }
+        return false;
+      }
+
+      // ── Attempt 2: classic anchor download (desktop & Android Chrome) ──
+      function tryDownload() {
+        try {
+          var link = document.createElement('a');
+          link.download = slug();
+          link.href = dataUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast('✓ Imagen descargada · Lista para WhatsApp');
+          return true;
+        } catch (e) {
+          console.log('anchor download failed:', e);
+        }
+        return false;
+      }
+
+      // ── Run the cascade ──
+      if (canvas.toBlob) {
+        canvas.toBlob(function (blob) {
+          var shared = tryShare(blob);
+          if (!shared) {
+            var downloaded = tryDownload();
+            if (!downloaded) {
+              // Absolute fallback: show modal
+              openModal(dataUrl, blob);
+            } else {
+              // Downloaded — also open modal as backup (iOS Safari ignores the anchor)
+              openModal(dataUrl, blob);
+            }
+          }
+          restoreBtn();
+        }, 'image/png', 1.0);
+      } else {
+        // toBlob not available — go straight to download + modal
+        tryDownload();
+        openModal(dataUrl, null);
+        restoreBtn();
+      }
+
+    }).catch(function (err) {
+      console.error('html2canvas error:', err);
+      showToast('No se pudo generar la imagen. Intentá de nuevo.');
+      restoreBtn();
+    });
+  });
+</script>
+
+</body>
+</html>
