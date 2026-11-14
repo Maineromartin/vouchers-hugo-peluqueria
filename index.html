@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hugo Peluquería · Generador de Vouchers</title>
+  <meta name="description" content="Generá vouchers de regalo elegantes para Hugo Peluquería. Descargá en alta calidad para compartir por WhatsApp." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* ══════════════════════════════════
+       RESET & TOKENS
+    ══════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Palette */
+      --cream:       #FAF8F5;
+      --white:       #FFFFFF;
+      --border:      #E6E1D8;
+      --border-lt:   #EFECE8;
+      --sage:        #6B8E8E;
+      --sage-lt:     #A8C4C4;
+      --sage-dk:     #4A6B6B;
+      --nude:        #A68A7B;
+      --nude-lt:     #C4A898;
+      --text:        #2C2C2C;
+      --text-mid:    #666056;
+      --text-soft:   #9A9188;
+
+      /* Accent */
+      --accent:      #6B8E8E;
+      --accent-lt:   #EAF2F2;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 4px rgba(44,44,44,.06);
+      --shadow-md: 0 4px 20px rgba(44,44,44,.08), 0 1px 4px rgba(44,44,44,.04);
+      --shadow-lg: 0 8px 40px rgba(44,44,44,.1), 0 2px 8px rgba(44,44,44,.05);
+
+      /* Radius */
+      --r-sm: 8px;
+      --r-md: 14px;
+      --r-lg: 20px;
+
+      /* Voucher card dimensions (4:5 vertical mobile-friendly) */
+      --vc-w: 400px;
+      --vc-h: 500px;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 35% at 15% 5%, rgba(107,142,142,.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 90% 90%, rgba(166,138,123,.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ══════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════ */
+    .app {
+      position: relative;
+      z-index: 1;
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100dvh;
+    }
+
+    /* ══════════════════════════════════
+       HEADER
+    ══════════════════════════════════ */
+    .app-header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 36px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-monogram {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--white);
+    }
+
+    .header-monogram svg { display: block; }
+
+    .header-info { display: flex; flex-direction: column; gap: 2px; }
+
+    .header-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .header-label {
+      font-size: .62rem;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .header-pill {
+      margin-left: auto;
+      background: var(--accent-lt);
+      color: var(--sage-dk);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════
+       FORM PANEL
+    ══════════════════════════════════ */
+    .panel-form {
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      overflow-y: auto;
+    }
+
+    .section-label {
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .fields { display: flex; flex-direction: column; gap: 18px; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+
+    .field label {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .95rem;
+      font-weight: 400;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      -webkit-appearance: none;
+    }
+
+    .field input:focus {
+      border-color: var(--sage);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(107,142,142,.12);
+    }
+
+    .field input::placeholder { color: #BFBAB2; }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: .5;
+    }
+
+    .code-input {
+      font-weight: 700 !important;
+      font-size: 1.05rem !important;
+      letter-spacing: .3em !important;
+      text-align: center;
+      color: var(--sage-dk) !important;
+      background: var(--accent-lt) !important;
+      border-color: var(--sage-lt) !important;
+    }
+
+    .btn-regen {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text-mid);
+      font-size: .75rem;
+      font-weight: 500;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 12px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-regen:hover {
+      border-color: var(--sage);
+      color: var(--sage-dk);
+      background: var(--accent-lt);
+    }
+
+    .field-hint {
+      font-size: .65rem;
+      color: var(--text-soft);
+      margin-top: -2px;
+    }
+
+    /* Download button */
+    .btn-download {
+      position: relative;
+      overflow: hidden;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--r-md);
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 17px 24px;
+      cursor: pointer;
+      width: 100%;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(107,142,142,.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .btn-download:hover { background: var(--sage-dk); transform: translateY(-1px); }
+    .btn-download:active { transform: translateY(0); }
+    .btn-download.loading { pointer-events: none; opacity: .75; }
+
+    /* ══════════════════════════════════
+       PREVIEW PANEL
+    ══════════════════════════════════ */
+    .panel-preview {
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background: var(--cream);
+    }
+
+    .preview-label {
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .preview-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .voucher-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* ══════════════════════════════════
+       VOUCHER CARD (4:5 VERTICAL)
+    ══════════════════════════════════ */
+    #voucher-card,
+    .voucher-card-export {
+      width: var(--vc-w);
+      min-height: var(--vc-h);
+      background: #FFFFFF;
+      border-radius: 18px;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(230,225,216,.85);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Inner frame inset */
+    #voucher-card::before,
+    .voucher-card-export::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(107,142,142,.22);
+      border-radius: 11px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Soft pastel top stripe */
+    .vc-stripe {
+      height: 7px;
+      background: linear-gradient(90deg, #A8C4C4 0%, #C4A8
