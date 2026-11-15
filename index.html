@@ -7,7 +7,7 @@
   <meta name="description" content="Generá vouchers de regalo elegantes para Hugo Peluquería. Descargá en alta calidad para compartir por WhatsApp." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     /* ══════════════════════════════════
@@ -24,7 +24,7 @@
       --sage:        #6B8E8E;
       --sage-lt:     #A8C4C4;
       --sage-dk:     #4A6B6B;
-      --text:        #262523;
+      --text:        #242321;
       --text-mid:    #5E5B55;
       --text-soft:   #8C877E;
 
@@ -99,10 +99,10 @@
     .header-info { display: flex; flex-direction: column; gap: 2px; }
 
     .header-brand {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-      letter-spacing: .12em;
+      font-family: 'Bodoni Moda', serif;
+      font-size: 1.08rem;
+      font-weight: 500;
+      letter-spacing: .1em;
       color: var(--text);
       line-height: 1;
     }
@@ -312,14 +312,14 @@
     }
 
     /* ══════════════════════════════════
-       VOUCHER CARD (EDITORIAL MINIMAL)
+       VOUCHER CARD (EDITORIAL DIDONE)
     ══════════════════════════════════ */
     #voucher-card,
     .voucher-card-export {
       width: var(--vc-w);
       min-height: var(--vc-h);
       background: var(--paper);
-      border-radius: 16px;
+      border-radius: 14px;
       box-shadow: var(--shadow-lg), 0 0 0 1px rgba(218,213,204,.85);
       display: flex;
       flex-direction: column;
@@ -327,7 +327,7 @@
       flex-shrink: 0;
       overflow: hidden;
       position: relative;
-      padding: 38px 36px 30px;
+      padding: 44px 36px 34px;
       color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
@@ -335,48 +335,53 @@
     /* Discrete voucher code top-right */
     .vc-code-corner {
       position: absolute;
-      top: 16px;
-      right: 20px;
-      font-size: .58rem;
+      top: 18px;
+      right: 22px;
+      font-size: .56rem;
       font-weight: 500;
-      letter-spacing: .2em;
+      letter-spacing: .22em;
       text-transform: uppercase;
       color: #A6A197;
     }
 
-    /* Top Title ("Voucher de regalo.") */
+    /* Top Title ("VOUCHER de REGALO") */
     .vc-top {
       text-align: center;
-      padding-top: 8px;
-      padding-bottom: 12px;
+      padding-top: 6px;
+      padding-bottom: 10px;
     }
 
     .vc-main-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.55rem;
-      font-weight: 300;
-      letter-spacing: -.01em;
-      color: #242321;
-      line-height: 1.05;
+      font-family: 'Bodoni Moda', serif;
+      font-size: 2.05rem;
+      font-weight: 400;
+      letter-spacing: .04em;
+      color: #22211F;
+      line-height: 1.12;
+      text-transform: uppercase;
     }
 
     .vc-main-title em {
       font-style: italic;
       font-weight: 400;
+      text-transform: lowercase;
+      font-size: 2.15rem;
+      letter-spacing: 0;
+      padding: 0 2px;
     }
 
-    /* Middle Form Lines (2 clean blocks like reference) */
+    /* Middle Form Lines */
     .vc-middle {
       display: flex;
       flex-direction: column;
       gap: 28px;
-      margin: 14px 0;
+      margin: 18px 0;
     }
 
     .vc-group {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 15px;
     }
 
     .vc-line-row {
@@ -385,11 +390,11 @@
       gap: 8px;
       border-bottom: 1px solid var(--line-ink);
       padding-bottom: 5px;
-      min-height: 28px;
+      min-height: 29px;
     }
 
     .vc-line-label {
-      font-size: .62rem;
+      font-size: .6rem;
       font-weight: 500;
       letter-spacing: .16em;
       text-transform: uppercase;
@@ -399,59 +404,52 @@
     }
 
     .vc-line-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.24rem;
-      font-weight: 500;
+      font-family: 'Bodoni Moda', serif;
+      font-size: 1.12rem;
+      font-weight: 400;
       color: #1F1E1C;
-      line-height: 1.2;
+      line-height: 1.25;
       word-break: break-word;
       flex: 1;
     }
 
     .vc-line-value.is-service {
-      font-size: 1.38rem;
-      font-weight: 600;
+      font-size: 1.24rem;
+      font-weight: 500;
       font-style: italic;
     }
 
-    /* Bottom Footer (Monogram + Hugo Peluquería + Contacto) */
+    /* Bottom Footer (Hugo Peluquería + Contacto, without HP monogram) */
     .vc-bottom {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       gap: 8px;
-      padding-top: 8px;
-    }
-
-    .vc-monogram {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2px;
+      padding-top: 10px;
     }
 
     .vc-salon-name {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Bodoni Moda', serif;
       font-size: 1.18rem;
-      font-weight: 600;
-      letter-spacing: .24em;
+      font-weight: 500;
+      letter-spacing: .22em;
       text-transform: uppercase;
-      color: #242321;
+      color: #22211F;
       line-height: 1.2;
     }
 
     .vc-contact {
       font-size: .72rem;
       font-weight: 400;
-      letter-spacing: .06em;
+      letter-spacing: .05em;
       color: #55524C;
       line-height: 1.4;
     }
 
     .vc-contact strong {
       font-weight: 600;
-      color: #242321;
+      color: #22211F;
     }
 
     /* ══════════════════════════════════
@@ -530,9 +528,9 @@
     }
 
     .modal-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-family: 'Bodoni Moda', serif;
+      font-size: 1.15rem;
+      font-weight: 500;
       letter-spacing: .04em;
       color: var(--text);
     }
@@ -681,7 +679,15 @@
       }
 
       #voucher-card {
-        padding: 34px 26px 26px;
+        padding: 38px 26px 28px;
+      }
+
+      .vc-main-title {
+        font-size: 1.85rem;
+      }
+
+      .vc-main-title em {
+        font-size: 1.95rem;
       }
     }
   </style>
@@ -763,13 +769,13 @@
 
     <div class="voucher-wrapper">
 
-      <!-- ════ VOUCHER CARD (EDITORIAL MINIMAL) ════ -->
+      <!-- ════ VOUCHER CARD (EDITORIAL DIDONE) ════ -->
       <div id="voucher-card">
         <div class="vc-code-corner" id="vc-codigo">#A1B2</div>
 
-        <!-- Top: Voucher de regalo. -->
+        <!-- Top: VOUCHER de REGALO -->
         <div class="vc-top">
-          <h2 class="vc-main-title">Voucher de <em>regalo.</em></h2>
+          <h2 class="vc-main-title">VOUCHER <em>de</em> REGALO</h2>
         </div>
 
         <!-- Middle: 2 blocks with hairline rules -->
@@ -797,14 +803,8 @@
           </div>
         </div>
 
-        <!-- Bottom: Monogram + Hugo Peluquería + Contacto -->
+        <!-- Bottom: Hugo Peluquería + Contacto -->
         <div class="vc-bottom">
-          <div class="vc-monogram">
-            <!-- Thin architectural HP monogram -->
-            <svg width="42" height="32" viewBox="0 0 42 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 4V28M22 4V28M8 16H22M22 4H29C32.866 4 36 7.13401 36 11C36 14.866 32.866 18 29 18H22" stroke="#242321" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
           <div class="vc-salon-name">Hugo Peluquería</div>
           <div class="vc-contact">
             Coordinar turno al <strong>3533-430057</strong> (Alejandra)
@@ -1033,9 +1033,9 @@
     clone.className = 'voucher-card-export';
     clone.style.cssText =
       'width:' + EXPORT_W + 'px;min-height:515px;height:auto;' +
-      'transform:none;border-radius:16px;overflow:hidden;box-shadow:none;' +
+      'transform:none;border-radius:14px;overflow:hidden;box-shadow:none;' +
       'background:#F3F1EC;display:flex;flex-direction:column;justify-content:space-between;' +
-      'position:relative;padding:38px 36px 30px;';
+      'position:relative;padding:44px 36px 34px;';
     wrapper.appendChild(clone);
     document.body.appendChild(wrapper);
 
