@@ -7,7 +7,7 @@
   <meta name="description" content="Generá vouchers de regalo elegantes para Hugo Peluquería. Descargá en alta calidad para compartir por WhatsApp." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     /* ══════════════════════════════════
@@ -16,37 +16,32 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* Palette */
       --cream:       #FAF8F5;
+      --paper:       #F3F1EC;
       --white:       #FFFFFF;
       --border:      #E6E1D8;
-      --border-lt:   #EFECE8;
+      --line-ink:    #9C978E;
       --sage:        #6B8E8E;
       --sage-lt:     #A8C4C4;
       --sage-dk:     #4A6B6B;
-      --nude:        #A68A7B;
-      --nude-lt:     #C4A898;
-      --text:        #2C2C2C;
-      --text-mid:    #666056;
-      --text-soft:   #9A9188;
+      --text:        #262523;
+      --text-mid:    #5E5B55;
+      --text-soft:   #8C877E;
 
-      /* Accent */
       --accent:      #6B8E8E;
       --accent-lt:   #EAF2F2;
 
-      /* Shadows */
       --shadow-sm: 0 1px 4px rgba(44,44,44,.06);
       --shadow-md: 0 4px 20px rgba(44,44,44,.08), 0 1px 4px rgba(44,44,44,.04);
-      --shadow-lg: 0 8px 40px rgba(44,44,44,.1), 0 2px 8px rgba(44,44,44,.05);
+      --shadow-lg: 0 10px 36px rgba(38,37,35,.10), 0 2px 8px rgba(38,37,35,.05);
 
-      /* Radius */
       --r-sm: 8px;
       --r-md: 14px;
       --r-lg: 20px;
 
-      /* Voucher card dimensions (4:5 vertical mobile-friendly) */
+      /* Voucher card 4:5 vertical */
       --vc-w: 400px;
-      --vc-h: 500px;
+      --vc-h: 515px;
     }
 
     html { scroll-behavior: smooth; font-size: 16px; }
@@ -57,17 +52,6 @@
       color: var(--text);
       min-height: 100dvh;
       overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 55% 35% at 15% 5%, rgba(107,142,142,.07) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 40% at 90% 90%, rgba(166,138,123,.05) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     /* ══════════════════════════════════
@@ -111,8 +95,6 @@
       flex-shrink: 0;
       background: var(--white);
     }
-
-    .header-monogram svg { display: block; }
 
     .header-info { display: flex; flex-direction: column; gap: 2px; }
 
@@ -262,7 +244,6 @@
       margin-top: -2px;
     }
 
-    /* Download button */
     .btn-download {
       position: relative;
       overflow: hidden;
@@ -331,213 +312,146 @@
     }
 
     /* ══════════════════════════════════
-       VOUCHER CARD (4:5 VERTICAL)
+       VOUCHER CARD (EDITORIAL MINIMAL)
     ══════════════════════════════════ */
     #voucher-card,
     .voucher-card-export {
       width: var(--vc-w);
       min-height: var(--vc-h);
-      background: #FFFFFF;
-      border-radius: 18px;
-      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(230,225,216,.85);
+      background: var(--paper);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(218,213,204,.85);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       flex-shrink: 0;
       overflow: hidden;
       position: relative;
+      padding: 38px 36px 30px;
+      color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* Inner frame inset */
-    #voucher-card::before,
-    .voucher-card-export::before {
-      content: '';
+    /* Discrete voucher code top-right */
+    .vc-code-corner {
       position: absolute;
-      inset: 12px;
-      border: 1px solid rgba(107,142,142,.22);
-      border-radius: 11px;
-      pointer-events: none;
-      z-index: 1;
+      top: 16px;
+      right: 20px;
+      font-size: .58rem;
+      font-weight: 500;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #A6A197;
     }
 
-    /* Soft pastel top stripe */
-    .vc-stripe {
-      height: 7px;
-      background: linear-gradient(90deg, #A8C4C4 0%, #C4A898 50%, #A8C4C4 100%);
-      flex-shrink: 0;
+    /* Top Title ("Voucher de regalo.") */
+    .vc-top {
+      text-align: center;
+      padding-top: 8px;
+      padding-bottom: 12px;
     }
 
-    .vc-body {
-      flex: 1;
+    .vc-main-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.55rem;
+      font-weight: 300;
+      letter-spacing: -.01em;
+      color: #242321;
+      line-height: 1.05;
+    }
+
+    .vc-main-title em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    /* Middle Form Lines (2 clean blocks like reference) */
+    .vc-middle {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 28px 30px 22px;
+      gap: 28px;
+      margin: 14px 0;
+    }
+
+    .vc-group {
+      display: flex;
+      flex-direction: column;
       gap: 14px;
     }
 
-    /* Header area */
-    .vc-head {
+    .vc-line-row {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      flex-shrink: 0;
+      align-items: baseline;
+      gap: 8px;
+      border-bottom: 1px solid var(--line-ink);
+      padding-bottom: 5px;
+      min-height: 28px;
     }
 
-    .vc-brand-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 600;
+    .vc-line-label {
+      font-size: .62rem;
+      font-weight: 500;
       letter-spacing: .16em;
-      color: #2C2C2C;
       text-transform: uppercase;
-      line-height: 1.12;
-    }
-
-    .vc-voucher-label {
-      font-size: .68rem;
-      font-weight: 600;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: #8C8278;
-      margin-top: 5px;
-    }
-
-    .vc-code-badge {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 2px;
+      color: #55524C;
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
-    .vc-code-label {
-      font-size: .55rem;
-      font-weight: 600;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: #A8A096;
-    }
-
-    .vc-code-val {
-      font-size: .9rem;
-      font-weight: 700;
-      letter-spacing: .18em;
-      color: #6B8E8E;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    /* Divider */
-    .vc-hr {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #E6E1D8 15%, #E6E1D8 85%, transparent);
-      flex-shrink: 0;
-    }
-
-    /* Vale por — hero block */
-    .vc-vale-box {
-      background: #FAF8F5;
-      border: 1px solid #EFECE8;
-      border-radius: 12px;
-      padding: 16px 18px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .vc-vale-label {
-      font-size: .68rem;
-      font-weight: 700;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: var(--sage-dk);
-      margin-bottom: 6px;
-    }
-
-    .vc-service {
+    .vc-line-value {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2.05rem;
+      font-size: 1.24rem;
+      font-weight: 500;
+      color: #1F1E1C;
+      line-height: 1.2;
+      word-break: break-word;
+      flex: 1;
+    }
+
+    .vc-line-value.is-service {
+      font-size: 1.38rem;
       font-weight: 600;
       font-style: italic;
-      color: #2C2C2C;
-      line-height: 1.18;
-      min-height: 2.4rem;
-      word-break: break-word;
     }
 
-    /* Recipients stacked cleanly so text is large & never cramped */
-    .vc-fields {
+    /* Bottom Footer (Monogram + Hugo Peluquería + Contacto) */
+    .vc-bottom {
       display: flex;
       flex-direction: column;
-      gap: 13px;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      padding-top: 8px;
     }
 
-    .vc-field {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .vc-field-label {
-      font-size: .6rem;
-      font-weight: 600;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: #9A9188;
-    }
-
-    .vc-field-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.28rem;
-      font-weight: 500;
-      color: #2C2C2C;
-      letter-spacing: .02em;
-      word-break: break-word;
-      border-bottom: 1px solid #E6E1D8;
-      padding-bottom: 4px;
-      min-height: 1.65rem;
-      line-height: 1.25;
-    }
-
-    /* Footer */
-    .vc-footer {
-      border-top: 1px solid #E6E1D8;
-      padding-top: 13px;
+    .vc-monogram {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      flex-shrink: 0;
+      margin-bottom: 2px;
     }
 
-    .vc-footer-icon {
-      width: 17px;
-      height: 17px;
-      flex-shrink: 0;
-      opacity: .85;
+    .vc-salon-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.18rem;
+      font-weight: 600;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: #242321;
+      line-height: 1.2;
     }
 
-    .vc-footer-text {
-      font-size: .78rem;
+    .vc-contact {
+      font-size: .72rem;
       font-weight: 400;
-      letter-spacing: .02em;
-      color: #666056;
-      text-align: center;
-      line-height: 1.35;
+      letter-spacing: .06em;
+      color: #55524C;
+      line-height: 1.4;
     }
 
-    .vc-footer-text strong {
-      font-weight: 700;
-      color: #2C2C2C;
-    }
-
-    /* Bottom stripe */
-    .vc-stripe-bottom {
-      height: 5px;
-      background: linear-gradient(90deg, #A8C4C4 0%, #C4A898 50%, #A8C4C4 100%);
-      flex-shrink: 0;
-      opacity: .75;
+    .vc-contact strong {
+      font-weight: 600;
+      color: #242321;
     }
 
     /* ══════════════════════════════════
@@ -765,6 +679,10 @@
         --vc-w: min(92vw, 400px);
         --vc-h: auto;
       }
+
+      #voucher-card {
+        padding: 34px 26px 26px;
+      }
     }
   </style>
 </head>
@@ -793,11 +711,6 @@
     <div class="fields">
 
       <div class="field">
-        <label for="f-servicio">Vale por</label>
-        <input id="f-servicio" type="text" placeholder="Ej: Corte + Nutrición · $25.000" autocomplete="off" />
-      </div>
-
-      <div class="field">
         <label for="f-para">Para</label>
         <input id="f-para" type="text" placeholder="Nombre de quien recibe" autocomplete="off" />
       </div>
@@ -808,7 +721,12 @@
       </div>
 
       <div class="field">
-        <label for="f-valido">Válido hasta el día</label>
+        <label for="f-servicio">Vale por</label>
+        <input id="f-servicio" type="text" placeholder="Ej: Corte + Nutrición · $25.000" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="f-valido">Válido hasta</label>
         <input id="f-valido" type="date" />
         <span class="field-hint">Por defecto: 30 días desde hoy</span>
       </div>
@@ -833,7 +751,7 @@
     <button class="btn-download" id="btn-download">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-        <path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986c-.047.187.009.385.148.52a.564.564 0 0 0 .392.158c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/>
+        <path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986a.564.564 0 0 0 .54.676c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/>
       </svg>
       Generar imagen para WhatsApp
     </button>
@@ -845,62 +763,53 @@
 
     <div class="voucher-wrapper">
 
-      <!-- ════ VOUCHER CARD (4:5 vertical) ════ -->
+      <!-- ════ VOUCHER CARD (EDITORIAL MINIMAL) ════ -->
       <div id="voucher-card">
-        <div class="vc-stripe"></div>
+        <div class="vc-code-corner" id="vc-codigo">#A1B2</div>
 
-        <div class="vc-body">
-
-          <!-- Head: brand + code -->
-          <div class="vc-head">
-            <div class="vc-title-block">
-              <div class="vc-brand-name">Hugo Peluquería</div>
-              <div class="vc-voucher-label">Voucher de Regalo</div>
-            </div>
-            <div class="vc-code-badge">
-              <span class="vc-code-label">Código</span>
-              <span class="vc-code-val" id="vc-codigo">—</span>
-            </div>
-          </div>
-
-          <div class="vc-hr"></div>
-
-          <!-- Vale por -->
-          <div class="vc-vale-box">
-            <div class="vc-vale-label">Vale por</div>
-            <div class="vc-service" id="vc-servicio">—</div>
-          </div>
-
-          <!-- Fields stacked -->
-          <div class="vc-fields">
-            <div class="vc-field">
-              <span class="vc-field-label">Para</span>
-              <span class="vc-field-val" id="vc-para">—</span>
-            </div>
-            <div class="vc-field">
-              <span class="vc-field-label">De</span>
-              <span class="vc-field-val" id="vc-de">—</span>
-            </div>
-            <div class="vc-field">
-              <span class="vc-field-label">Válido hasta el día</span>
-              <span class="vc-field-val" id="vc-valido">—</span>
-            </div>
-          </div>
-
-          <!-- Footer -->
-          <div class="vc-footer">
-            <svg class="vc-footer-icon" viewBox="0 0 24 24" fill="#6B8E8E" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-              <path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.986a.564.564 0 0 0 .54.676c.054 0 .108-.007.162-.022l6.284-1.65A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.628 0 12 0zm0 21.6a9.57 9.57 0 0 1-4.845-1.311l-.347-.206-3.6.945.962-3.516-.226-.362A9.572 9.572 0 0 1 2.4 12c0-5.293 4.307-9.6 9.6-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.292-4.307 9.6-9.6 9.6z"/>
-            </svg>
-            <div class="vc-footer-text">
-              Coordinar turno al <strong>3533-430057</strong> (Alejandra)
-            </div>
-          </div>
-
+        <!-- Top: Voucher de regalo. -->
+        <div class="vc-top">
+          <h2 class="vc-main-title">Voucher de <em>regalo.</em></h2>
         </div>
 
-        <div class="vc-stripe-bottom"></div>
+        <!-- Middle: 2 blocks with hairline rules -->
+        <div class="vc-middle">
+          <div class="vc-group">
+            <div class="vc-line-row">
+              <span class="vc-line-label">Para:</span>
+              <span class="vc-line-value" id="vc-para"></span>
+            </div>
+            <div class="vc-line-row">
+              <span class="vc-line-label">De:</span>
+              <span class="vc-line-value" id="vc-de"></span>
+            </div>
+          </div>
+
+          <div class="vc-group">
+            <div class="vc-line-row">
+              <span class="vc-line-label">Vale por:</span>
+              <span class="vc-line-value is-service" id="vc-servicio"></span>
+            </div>
+            <div class="vc-line-row">
+              <span class="vc-line-label">Válido hasta:</span>
+              <span class="vc-line-value" id="vc-valido"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom: Monogram + Hugo Peluquería + Contacto -->
+        <div class="vc-bottom">
+          <div class="vc-monogram">
+            <!-- Thin architectural HP monogram -->
+            <svg width="42" height="32" viewBox="0 0 42 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 4V28M22 4V28M8 16H22M22 4H29C32.866 4 36 7.13401 36 11C36 14.866 32.866 18 29 18H22" stroke="#242321" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="vc-salon-name">Hugo Peluquería</div>
+          <div class="vc-contact">
+            Coordinar turno al <strong>3533-430057</strong> (Alejandra)
+          </div>
+        </div>
       </div>
       <!-- ════ END VOUCHER CARD ════ -->
 
@@ -956,7 +865,7 @@
   }
 
   function formatDate(val) {
-    if (!val) return '—';
+    if (!val) return '';
     var parts = val.split('-');
     var y = parts[0];
     var m = parseInt(parts[1], 10);
@@ -988,12 +897,12 @@
 
   /* ── Sync card in real time ── */
   function syncCard() {
-    document.getElementById('vc-para').textContent     = fPara.value.trim()  || '—';
-    document.getElementById('vc-de').textContent       = fDe.value.trim()    || '—';
-    document.getElementById('vc-servicio').textContent = fSrv.value.trim()   || '—';
+    document.getElementById('vc-para').textContent     = fPara.value.trim();
+    document.getElementById('vc-de').textContent       = fDe.value.trim();
+    document.getElementById('vc-servicio').textContent = fSrv.value.trim();
     document.getElementById('vc-valido').textContent   = formatDate(fValido.value);
     var code = fCodigo.value.trim().toUpperCase();
-    document.getElementById('vc-codigo').textContent   = code ? '#' + code : '—';
+    document.getElementById('vc-codigo').textContent   = code ? '#' + code : '';
   }
 
   fCodigo.addEventListener('input', function () {
@@ -1114,7 +1023,6 @@
       });
     });
 
-    // Fixed 4:5 portrait width (400px) matching 16px root rem so fonts stay huge and proportional
     var EXPORT_W = 400;
     var wrapper  = document.createElement('div');
     wrapper.style.cssText =
@@ -1124,9 +1032,10 @@
     clone.removeAttribute('id');
     clone.className = 'voucher-card-export';
     clone.style.cssText =
-      'width:' + EXPORT_W + 'px;min-height:500px;height:auto;' +
-      'transform:none;border-radius:18px;overflow:hidden;box-shadow:none;' +
-      'background:#FFFFFF;display:flex;flex-direction:column;position:relative;';
+      'width:' + EXPORT_W + 'px;min-height:515px;height:auto;' +
+      'transform:none;border-radius:16px;overflow:hidden;box-shadow:none;' +
+      'background:#F3F1EC;display:flex;flex-direction:column;justify-content:space-between;' +
+      'position:relative;padding:38px 36px 30px;';
     wrapper.appendChild(clone);
     document.body.appendChild(wrapper);
 
@@ -1137,7 +1046,7 @@
         scale: 3,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#F3F1EC',
         x: 0,
         y: 0,
         scrollX: 0,
